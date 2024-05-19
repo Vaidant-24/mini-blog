@@ -1,0 +1,27 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4 text-light">
+    <h2 class="mb-4">Welcome to the Index Page</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} mb-4" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% for post in posts %}
+        <div class="card mb-4 bg-dark text-light">
+            <div class="card-body">
+                <h1 class="card-title display-4 font-weight-bold">{{ post.title }}</h1>
+                <p class="card-text lead">{{ post.desc }}</p>
+            </div>
+            <div class="card-footer bg-dark">
+                <small class="text-muted">Posted on {{ post.posted_on }}</small>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

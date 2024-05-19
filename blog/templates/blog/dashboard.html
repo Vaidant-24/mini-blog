@@ -1,0 +1,72 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block msg %}
+<div class="col-sm-3 text-white my-3">
+    <h5 class="my-3">Profile: {{ name }}</h5>
+    {% for group in groups %}
+        <p>{{ group.name }}</p>
+    {% endfor %}
+</div>
+{% if messages %}
+    <div class="col-sm-9 my-3">
+        {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show" {% endif %}>
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock msg %}
+
+{% block side %}
+
+{% endblock side %}
+
+{% block content %}
+<div class="col-sm-9 text-center">
+    <h3 class="text-white my-3">Dashboard Page</h3>
+    <h4 class="alert alert-info mt-3">Show Post Info</h4>
+
+    {% if posts %}
+    <table class="table table-hover bg-white">
+        <thead>
+            <tr class="text-center">
+                <th scope="col" style="width: 5%">#</th>
+                <th scope="col" style="width: 25%">Title</th>
+                <th scope="col" style="width: 50%">Description</th>
+                <th scope="col" style="width: 20%">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <th>{{ forloop.counter }}</th>
+                <td>{{ post.title }}</td>
+                <td>{{ post.desc }}</td>
+                <td class="align-content-center">
+                    <a href="{% url 'blog:update_post' post.id %}" class="btn btn-success btn-sm">Edit</a>
+                    {% if perms.blog.delete_post %}
+                    <form action="{% url 'blog:delete_post' post.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning mt-3" role="alert">
+        No posts available.
+    </div>
+    {% endif %}
+
+    <div class="text-left">
+        <a href="{% url 'blog:add_post' %}" class="btn btn-success my-0">Add Post</a>
+    </div>
+</div>
+{% endblock content %}
